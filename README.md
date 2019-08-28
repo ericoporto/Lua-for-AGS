@@ -1,6 +1,9 @@
+# agslua
 
-Complications
-=============
+[![Build Status](https://dev.azure.com/ericoporto/agslua/_apis/build/status/ericoporto.agslua?branchName=master)](https://dev.azure.com/ericoporto/agslua/_build/latest?definitionId=10&branchName=master)
+
+## Complications
+
 - The editor plugin is ILMerged with ZLib.NET and Scintilla.NET, as a post-compile action
 	- ILMerge: http://www.microsoft.com/download/en/details.aspx?displaylang=en&id=17630
 	- ZLib.NET: http://www.componentace.com/zlib_.NET.htm
