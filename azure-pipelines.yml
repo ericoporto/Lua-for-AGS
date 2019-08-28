@@ -1,0 +1,70 @@
+# C/C++ with GCC
+# Build your C/C++ project with GCC using make.
+# Add steps that publish test results, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/c-cpp/gcc
+
+trigger:
+  branches:
+    include:
+      - refs/heads/*
+      - refs/tags/*
+
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    mac:
+      imageName: 'macos-10.13'
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+# Linux
+- bash: |
+    sudo apt install lua5.1 liblua5.1-0-dev
+    pushd ..
+    git clone https://github.com/adventuregamestudio/ags.git
+    pushd ags
+    git checkout release-3.5.0
+    popd
+    popd
+    pushd agslua
+    make
+    popd
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: 'make'
+
+- task: CopyFiles@2
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)/agslua'
+    contents: 'libagslua.so'
+    targetFolder: $(Build.ArtifactStagingDirectory)
+
+# macOS
+- bash: |
+    brew install lua@5.1
+    pushd ..
+    git clone https://github.com/adventuregamestudio/ags.git
+    pushd ags
+    git checkout release-3.5.0
+    popd
+    popd
+    pushd agslua
+    make
+    popd
+  condition: eq( variables['Agent.OS'], 'Darwin' )
+  displayName: 'make'
+
+- task: CopyFiles@2
+  condition: eq( variables['Agent.OS'], 'Darwin' )
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)/agslua'
+    contents: 'libagslua.dylib'
+    targetFolder: $(Build.ArtifactStagingDirectory)
+
+
+- bash: |
+    echo "##vso[task.setvariable variable=tagname]$(git describe --tags $(git rev-list --tags --max-count=1))"
+

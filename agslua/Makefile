@@ -1,6 +1,6 @@
 UNAME := $(shell uname)
 
-INCDIR = agslua/lualibhelp/include/ ../../Engine ../../Common
+INCDIR = ../lualibhelp/include/ ../../Engine ../../Common
 LIBDIR =
 CC = gcc
 CXX = g++
